@@ -6,23 +6,47 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
+## Part 1 – Build the Dataset
 ```{r}
-1 + 1
+library(tidyverse)
+library(here)
 ```
 
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+#generate data for day and PM 2.5 levels
+day <- seq(1,365,1)
+pm25 <- rpois(365, 28)
+air_start <- data.frame(day, pm25)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{r}
+#check data to make sure it's realistic
+ggplot(air_start, aes(x=day, y=pm25)) +
+  geom_point()
+```
+
+```{r}
+# generate data for season as a factor, and risk
+air_data <- air_start |>
+  mutate(season = case_when(
+  day >= 271 ~ "fall",
+  day >= 181 ~ "summer",
+  day >= 91 ~ "spring",
+  TRUE        ~ "winter")) |>
+  mutate( risk = NA)
+```
+
+## Part 2 – Classify Risk with a For Loop
+
+```{r}
+for (i in 1:365) {
+  air_data$risk[i] = case_when(
+   air_data$pm25[i] < 12 ~ "good",
+   air_data$pm25[i] > 35.4 ~ "unhealthy",
+   air_data$pm25[i] <= 35.4 ~ "moderate",
+    TRUE ~ "NA"
+  )
+}
+```
+

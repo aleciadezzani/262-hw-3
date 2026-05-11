@@ -11,30 +11,45 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(here)
-
 ```
 
 ## Data Types
 
 Some useful data types in R:
-
+- integer
+- floating point/ real / numeric
 - string
 - numeric
 - tibble
 - factors
 - lists
-- 
+
 
 ## Ways to Generate Data
 
 When testing your code, it can be helpful to generate test data.
 
-Generating numeric data: `runif(min, max)` = sampling from a uniform distribution `rnorm(mean, sd)` = sampling from a uniform and normal distribution `rpois(lambda)` = sampling from a poisson distribution
+Generating numeric data: 
 
-For categorical data: `sample(vector)` `sequence`
+- *runif(min,max)* (sampling from a uniform distribution)
+- *rnorm(mean,sd)* (sampling from uniform and normal distributions)
+- *rpois(lambda)* (sampling from a Poisson distribution)
+
+For categorical data:
+## Other ways to generate data
+
+- *sample(vector,size,replace)* (sampling from a vector of values)
+- *seq(start,end,by)* (for creating a sequence of numbers)
+
+
+## Examples
+
+- Fire starts - uniform distribution
+- Otter weights - normal distribution
+- Randomly picking years from a sequence of years
 
 ### Examples
-
+```
 - fire starts = uniform distribution
 
 ```{r}
@@ -57,6 +72,7 @@ Pick a random sample from a vector of values:
 ```{r}
 pick = sample(seq(2000, 2025), size = 20, replace = TRUE)
 pick
+
 
 # no repeat years
 pick2 = sample(seq(2000, 2025), size = 20, replace = FALSE)
@@ -272,7 +288,7 @@ i = 1 a = 0 + 1 = 1 i = 2 a = 1 + 2 = 3 i = 3 a = 3 + 3 = 6
   - its good practice to initialize data before a loop
   - initialize means to create a data structure and set values, usually to zero but sometimes NA
 
-  ```{r}
+```{r}
   # if you want to keep track of a for each iteration
   # start with a data structure to hold the results - 
   # there will be 5 iterations, so a vector of length 5
@@ -292,13 +308,13 @@ i = 1 a = 0 + 1 = 1 i = 2 a = 1 + 2 = 3 i = 3 a = 3 + 3 = 6
     }
   }
   av
-  ```
+```
 
-  ```{r}
+```{r}
   # note that R has alternatives using functions that do this looping for you
   a = sum(seq(from=1, to=5))
   a
-  ```
+```
 
 ### When to use loops
 
