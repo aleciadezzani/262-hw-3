@@ -431,7 +431,7 @@ speedthresh = 120
 speeds = runif(min=0, max=150, n=300)
 
 nthresh = 0 #create a column for the values from loop to go 
-for ( i  in 1:length(speeds)) {   #using length(data) allows you to make sure all rows are counted
+for (i in 1:length(speeds)) {   #using length(data) allows you to make sure all rows are counted
    if(speeds[i] > speedthresh)
      nthresh = nthresh + 1
 }

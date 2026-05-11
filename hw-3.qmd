@@ -7,11 +7,11 @@ editor: visual
 ---
 
 ## Part 1 – Build the Dataset
+
 ```{r}
 library(tidyverse)
 library(here)
 ```
-
 
 ```{r}
 #generate data for day and PM 2.5 levels
@@ -22,8 +22,12 @@ air_start <- data.frame(day, pm25)
 
 ```{r}
 #check data to make sure it's realistic
+
+mean(air_start$pm25)
+
 ggplot(air_start, aes(x=day, y=pm25)) +
-  geom_point()
+  geom_point() +
+  geom_hline(yintercept = 35.4, color = "red")
 ```
 
 ```{r}
@@ -34,12 +38,13 @@ air_data <- air_start |>
   day >= 181 ~ "summer",
   day >= 91 ~ "spring",
   TRUE        ~ "winter")) |>
-  mutate( risk = NA)
+  mutate(risk = NA)
 ```
 
 ## Part 2 – Classify Risk with a For Loop
 
 ```{r}
+# add in risk classification
 for (i in 1:365) {
   air_data$risk[i] = case_when(
    air_data$pm25[i] < 12 ~ "good",
@@ -48,5 +53,49 @@ for (i in 1:365) {
     TRUE ~ "NA"
   )
 }
+```
+
+
+```{r}
+# create empty column for "streak" of unhealthy days with zeros
+air_data <- air_data |> mutate(streak = 0)
+
+#  track the longest consecutive streak of "unhealthy" days
+for (i in 2:365) {
+  if (air_data$risk[i-1] == "unhealthy") {
+    air_data$streak[i] = air_data$streak[i-1] + 1}
+  else(air_data$streak[i] = 0)
+}
+
+max_unhealthy_streak <- max(air_data$streak)
+max_unhealthy_streak
+```
+
+## Part 3 – Seasonal Summary with a For Loop
+
+```{r}
+# Write a for loop that computes number of days in each season that fall into unhealthy risk category
+
+num_winter_unhealthy = 0
+num_spring_unhealthy = 0
+num_fall_unhealthy = 0
+num_summer_unhealthy = 0
+
+for (i in 1:365) {
+  if (i < 91) {
+    num_winter_unhealthy = num_winter_unhealthy + ifelse(air_data$risk[i] == "unhealthy", 1, 0)}
+  if (i < 181) {
+    num_spring_unhealthy = num_spring_unhealthy + ifelse(air_data$risk[i] == "unhealthy", 1, 0)} 
+  if (i >=271) {
+    num_fall_unhealthy = num_fall_unhealthy + ifelse(air_data$risk[i] == "unhealthy", 1, 0)}
+  if (i >= 181) {
+    num_summer_unhealthy = num_summer_unhealthy + ifelse(air_data$risk[i] == "unhealthy", 1, 0)}
+  }
+```
+
+## Part 4 – Visualize and Report
+
+```{r}
+
 ```
 
